@@ -1,0 +1,32 @@
+name: Build ESPHome Firmware
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Build ESPHome firmware
+      uses: esphome/builder-action@v1
+      with:
+        # Path ke file konfigurasi ESPHome
+        config: "devices/*.yaml"
+        # Platform target (opsional)
+        platform: esp32
+        # Versi ESPHome (opsional)
+        version: latest
+        
+    - name: Upload firmware artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: esphome-firmwares
+        path: build/*.bin
+        retention-days: 30
